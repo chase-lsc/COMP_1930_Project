@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+        <title>Shop by Ingredients</title>
+        <style>
+            .vertical-align {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                align-items: center;
+            }
+            .shop-button {
+                margin: 7px;
+                width: 250px;
+            }
+        </style>
+    </head>
+    <body style="background-color:burlywood">
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script>
+        // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+                authDomain: "test-1bf00.firebaseapp.com",
+                databaseURL: "https://test-1bf00.firebaseio.com",
+                projectId: "test-1bf00",
+                storageBucket: "test-1bf00.appspot.com",
+                messagingSenderId: "305562771380",
+                appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+                measurementId: "G-VYK3VTRJJH"
+            };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+        </script>
+
+        <div class="container vertical-align" style="background-color:white">
+            <table class="table" id="mainTable">
+                <thead>
+                    <tr>
+                    <th scope="col" colspan="5">Item Name</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td scope="col" colspan="5">Beef Brand A</td>
+                    <td scope="col">$ 6.99</td>
+                    <td scope="col">500g</td>
+                    </tr>
+                    <tr>
+                    <td scope="col" colspan="5">Beef Brand B</th>
+                    <td scope="col">$ 7.99</td>
+                    <td scope="col">500g</td>
+                    </tr>
+                    <tr>
+                    <td scope="col" colspan="5">Beef Brand C</th>
+                    <td scope="col">$ 2.99</td>
+                    <td scope="col">375g</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+        <script>
+            var ingredients = db.collection("Grocery Stores").doc("PriceSmart").get()
+            console.log(ingredients)
+            console.log(ingredients.collection("Beef").doc("Brand A").price.get())
+            var table = document.getElementById("mainTable")
+            var newtr = document.createElement("tr")
+            var newth = document.createElement("td")
+            newth.scope="col"
+            newth.setAttribute("colspan", "5")
+            newth.innerHTML=ingredients.collection("Beef").doc("Brand A").price
+            var newth2 = document.createElement("td")
+            newth2.innerHTML='$ 5.99'
+            var newth3 = document.createElement("td")
+            newth3.innerHTML='400g'
+            newtr.appendChild(newth)
+            newtr.appendChild(newth2)
+            newtr.appendChild(newth3)
+            table.appendChild(newtr)
+        </script>
+    </body>
+</html>

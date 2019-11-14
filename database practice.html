@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+
+        <script>
+        // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+                authDomain: "test-1bf00.firebaseapp.com",
+                databaseURL: "https://test-1bf00.firebaseio.com",
+                projectId: "test-1bf00",
+                storageBucket: "test-1bf00.appspot.com",
+                messagingSenderId: "305562771380",
+                appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+                measurementId: "G-VYK3VTRJJH"
+            };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+        </script>
+
+        <h1>lets read from database: <span id=data>...</span></h1>
+
+        <script>
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Flour").doc("Brand A").set({
+                quantity: [5, 'kg'],
+                price: 6.99
+            })
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Flour").doc("Brand B").set({
+                quantity: [5, 'kg'],
+                price: 8.99
+            })
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Flour").doc("Brand C").set({
+                quantity: [2, 'kg'],
+                price: 3.99
+            })
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Beef").doc("Brand A").set({
+                quantity: [500, 'g'],
+                price: 7.00
+            })
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Beef").doc("Brand B").set({
+                quantity: [350, 'g'],
+                price: 8.48
+            })
+            db.collection("Grocery Stores").doc("PriceSmart").collection("Beef").doc("Brand C").set({
+                quantity: [375, 'g'],
+                price: 6.49
+            })
+        </script>
+    </body>
+</html>
