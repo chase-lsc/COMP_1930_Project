@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
@@ -13,24 +15,19 @@
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
-                align-items: center;
             }
             .shop-button {
                 margin: 7px;
                 width: 250px;
             }
+            /* #card {
+                position: absolute;
+                margin-left: 70%;
+                margin-top: 2%
+            } */
         </style>
     </head>
     <body style="background-color:burlywood">
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
-
-        <!-- TODO: Add SDKs for Firebase products that you want to use
-        https://firebase.google.com/docs/web/setup#available-libraries -->
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -52,55 +49,134 @@
         var db = firebase.firestore();
         </script>
 
-        <div class="container vertical-align" style="background-color:white">
+        
+
+        <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
+            <div class='card' id='card' style='text-align: center;'>
+                <p id='counter' class='card-subtitle mb-2 text-muted'>Items Selected: 0</p>
+                <p id='counter2' class='card-subtitle mb-2 text-muted'>Total Price: $ 0</p>
+            </div>
             <table class="table" id="mainTable">
                 <thead>
                     <tr>
-                    <th scope="col" colspan="5">Item Name</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col">Quantity</th>
+                    <th scope="col" width="40%">Item Name</th>
+                    <th scope="col" width="15%">Price</th>
+                    <th scope="col" width="15%">Quantity</th>
+                    <th scope="col" width=30%></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                    <td scope="col" colspan="5">Beef Brand A</td>
-                    <td scope="col">$ 6.99</td>
-                    <td scope="col">500g</td>
-                    </tr>
-                    <tr>
-                    <td scope="col" colspan="5">Beef Brand B</th>
-                    <td scope="col">$ 7.99</td>
-                    <td scope="col">500g</td>
-                    </tr>
-                    <tr>
-                    <td scope="col" colspan="5">Beef Brand C</th>
-                    <td scope="col">$ 2.99</td>
-                    <td scope="col">375g</td>
-                    </tr>
-                </tbody>
             </table>
+            <div class="fixed-bottom">
+                <table class='table'>
+                    <thead>
+                        <tr>
+                            <th>
+                                <button id='empty' class='btn btn-warning btn-lg btn-block'>Empty Current List</button>
+                            </th>
+                            <th>
+                                <button class='btn btn-info btn-lg btn-block'>View Shopping List</button>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
-
         
+        
+
         <script>
-            var ingredients = db.collection("Grocery Stores").doc("PriceSmart").get()
-            console.log(ingredients)
-            console.log(ingredients.collection("Beef").doc("Brand A").price.get())
-            var table = document.getElementById("mainTable")
-            var newtr = document.createElement("tr")
-            var newth = document.createElement("td")
-            newth.scope="col"
-            newth.setAttribute("colspan", "5")
-            newth.innerHTML=ingredients.collection("Beef").doc("Brand A").price
-            var newth2 = document.createElement("td")
-            newth2.innerHTML='$ 5.99'
-            var newth3 = document.createElement("td")
-            newth3.innerHTML='400g'
-            newtr.appendChild(newth)
-            newtr.appendChild(newth2)
-            newtr.appendChild(newth3)
-            table.appendChild(newtr)
+            let categories= ['Beef', 'Flour'];
+            var totalitems=0
+            var totalprice=0
+            db.collection('Shopping List').doc('Temporary').get().then(function(doc){
+                totalitems=doc.data().ti
+                totalprice=doc.data().tp
+                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
+                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
+            })
+            for (let i=0; i<categories.length; i++){
+                let block = document.getElementById('mainBlock')
+                let div = document.createElement('div')
+                div.setAttribute('id', categories[i])
+                div.setAttribute('class', 'table-responsive')
+                let table = document.createElement("table")
+                table.setAttribute('class', 'table')
+                let btn = document.createElement("button")
+                btn.setAttribute('class', 'btn btn-secondary btn-lg btn-block text-left')
+                btn.setAttribute('data-toggle', 'collapse')
+                btn.setAttribute('href', '#'+categories[i])
+                btn.setAttribute('aria-expanded', 'false')
+                btn.setAttribute('aria-controls', categories[i])
+                btn.innerHTML = categories[i]
+                btn.setAttribute('style', 'margin: 7px')
+                block.appendChild(btn)
+                block.appendChild(div)
+                div.appendChild(table)
+
+                db.collection('Grocery Stores').doc('PriceSmart').collection(categories[i]).get().then((snapshot) => {
+                    snapshot.docs.forEach(doc => {
+                        console.log(doc)
+                        console.log(doc.data().quantity)
+                        let price=doc.data().price
+                        let quantity=doc.data().quantity
+                        let newtr = document.createElement("tr")
+                        let newth = document.createElement("td")
+                        newth.setAttribute("width", "40%")
+                        newth.innerHTML=doc.data().name
+                        let newth2 = document.createElement("td")
+                        newth2.setAttribute("width", "15%")
+                        newth2.innerHTML='$ '+doc.data().price
+                        let newth3 = document.createElement("td")
+                        newth3.setAttribute("width", "15%")
+                        newth3.innerHTML=doc.data().quantity[0]+doc.data().quantity[1]
+                        let newth4 = document.createElement('td')
+                        newth4.setAttribute('width', '30%')
+                        let btnId = doc.data().name
+                        let addBtn = document.createElement('button')
+                        addBtn.setAttribute('class', 'btn btn-secondary btn-sm')
+                        newth4.appendChild(addBtn)
+                        addBtn.innerHTML='Add to Cart'
+                        newtr.appendChild(newth)
+                        newtr.appendChild(newth2)
+                        newtr.appendChild(newth3)
+                        newtr.appendChild(newth4)
+                        table.appendChild(newtr)
+                        addBtn.onclick=addBtnHandler
+                        function addBtnHandler() {
+                            totalitems++
+                            totalprice = totalprice + doc.data().price
+                            db.collection('Shopping List').doc('Temporary').update({
+                                [totalitems] : [btnId, doc.data().price],
+                                tp: totalprice,
+                                ti: totalitems
+                            })
+                            document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
+                            document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
+                        }
+                    })
+                })
+            }
+            function emptyHandler() {
+                db.collection('Shopping List').doc('Temporary').set({
+                    ti: 0,
+                    tp: 0
+                })
+                totalprice = 0
+                totalitems = 0
+                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
+                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
+            }
+            document.getElementById('empty').onclick=emptyHandler
+            db.collection('Grocery Stores').doc('PriceSmart').collection('Beef').get().then((snapshot) => {
+                snapshot.docs.forEach(doc => {
+                    console.log(doc)
+                    console.log(doc.data().quantity[1])
+                    let price=doc.data().price
+                    let quantity=doc.data().quantity
+                    
+                })
+            })
+            
         </script>
     </body>
 </html>
