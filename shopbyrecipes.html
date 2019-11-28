@@ -100,12 +100,16 @@
             let storeselection=0
             let totalitems=0
             let totalprice=0
+            // retrives total items and total price from db's temporary shopping list
             db.collection('Shopping List').doc('Temporary').get().then(function(doc){
                 totalitems=doc.data().ti
                 totalprice=doc.data().tp
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             })
+            // loops through all recipes in the recipe library to create collapsable table for each recipe
+            // each table is composed of rows for each ingredients
+            // each row contains information about the ingredients, as well as a checkbox, checked by default
             db.collection('Recipe Library').get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 let recipename = doc.data().name
                 let block = document.getElementById('mainBlock')
@@ -169,6 +173,7 @@
                     })
                 }
                 
+                // creates a add all selected button for each recipe
                 db.collection('Ingredients').get().then(function(doc){
                     let addselected = document.createElement('button')
                     addselected.innerHTML='Add Selected'
@@ -180,6 +185,10 @@
                     table.appendChild(newtr)
                     addselected.onclick = addSelectedHandler
                 })
+                // add all selected button button action
+                // finds all ingredients with checked checkboxes
+                // add them to current shopping cart
+                // updates the shopping cart as well as current total price and items
                 function addSelectedHandler() {
                     let selectedcount = 0
                     let selectedprices = 0
@@ -203,73 +212,8 @@
                 }
                 
             })})
-            // db.collection('Ingredients').get().then((snapshot) =>{snapshot.docs.forEach(doc => {
-            //     let block = document.getElementById('mainBlock')
-            //     let div = document.createElement('div')
-            //     div.setAttribute('id', doc.data().name)
-            //     div.setAttribute('class', 'table-responsive')
-            //     let table = document.createElement("table")
-            //     table.setAttribute('class', 'table')
-            //     let btn = document.createElement("button")
-            //     btn.setAttribute('class', 'btn btn-secondary btn-lg btn-block text-left')
-            //     btn.setAttribute('data-toggle', 'collapse')
-            //     btn.setAttribute('href', '#'+doc.data().name)
-            //     btn.setAttribute('aria-expanded', 'false')
-            //     btn.setAttribute('aria-controls', doc.data().name)
-            //     btn.innerHTML = doc.data().name
-            //     btn.setAttribute('style', 'margin: 7px')
-            //     block.appendChild(btn)
-            //     block.appendChild(div)
-            //     div.appendChild(table)
-
-            //     let brands = doc.data().brands
-            //     for (let i=0;i<brands.length;i++){
-            //         let price=brands[i].price
-            //         let quantity=brands[i].quantity
-            //         let newtr = document.createElement("tr")
-            //         let newth = document.createElement("td")
-            //         newth.setAttribute("width", "40%")
-            //         newth.innerHTML=brands[i].name
-            //         let newth2 = document.createElement("td")
-            //         newth2.setAttribute("width", "15%")
-            //         newth2.innerHTML='$ '+brands[i].price
-            //         let newth3 = document.createElement("td")
-            //         newth3.setAttribute("width", "15%")
-            //         newth3.innerHTML=brands[i].quantity[0]+brands[i].quantity[1]
-            //         let newth4 = document.createElement('td')
-            //         newth4.setAttribute('width', '30%')
-            //         let addBtn = document.createElement('button')
-            //         addBtn.setAttribute('class', 'btn btn-secondary btn-sm')
-            //         newth4.appendChild(addBtn)
-            //         addBtn.innerHTML='Add to Cart'
-            //         newtr.appendChild(newth)
-            //         newtr.appendChild(newth2)
-            //         newtr.appendChild(newth3)
-            //         newtr.appendChild(newth4)
-            //         table.appendChild(newtr)
-            //         addBtn.onclick=addBtnHandler
-            //         function addBtnHandler() {
-            //             if (brands[i].availability[storeselection]) {
-            //                 totalitems++
-            //                 totalprice = totalprice + brands[i].price
-            //                 db.collection('Shopping List').doc('Temporary').update({
-            //                     [totalitems] : [brands[i].name, brands[i].price],
-            //                     tp: totalprice,
-            //                     ti: totalitems
-            //                 })
-            //                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
-            //                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
-            //             }
-            //             else {
-            //                 document.getElementById('outofstockmsg').innerHTML=brands[i].name+' is not available at the grocery store you have selected.'
-            //                 $("#outofstock").modal()
-            //             }
-            //         }
-            //     }
-
-            // })})
-
             
+            // button that empties the current shopping cart
             function emptyHandler() {
                 db.collection('Shopping List').doc('Temporary').set({
                     ti: 0,

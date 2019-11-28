@@ -100,14 +100,15 @@
             let storeselection=0
             let totalitems=0
             let totalprice=0
+            // retrives total items and total price from db's temporary shopping list
             db.collection('Shopping List').doc('Temporary').get().then(function(doc){
                 totalitems=doc.data().ti
                 totalprice=doc.data().tp
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             })
-            let test='abcdef'
-            console.log(test[2])
+            // loops through all categories of ingredients
+            // creates collapsible table for each category of ingredients
             db.collection('Ingredients').get().then((snapshot) =>{snapshot.docs.forEach(doc => {
                 let block = document.getElementById('mainBlock')
                 let div = document.createElement('div')
@@ -127,6 +128,9 @@
                 block.appendChild(div)
                 div.appendChild(table)
 
+                // loops through all shop items of current loop's category
+                // creates rows with information about the shop item
+                // also creates add to cart button for each shop item
                 let brands = doc.data().brands
                 for (let i=0;i<brands.length;i++){
                     let price=brands[i].price
@@ -174,7 +178,7 @@
 
             })})
 
-            
+            // this button empties the current shopping cart            
             function emptyHandler() {
                 db.collection('Shopping List').doc('Temporary').set({
                     ti: 0,
