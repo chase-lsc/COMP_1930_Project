@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Landing Page</title>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  <style>
+    #logo {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 25px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body style="background-color:burlywood">
+  <!-- The surrounding HTML is left untouched by FirebaseUI.
+     Your app may use that space for branding, controls and other customizations.-->
+  <h1>Welcome to Easy Grocery App</h1>
+  <img id="logo" src="images/logo.png">
+  <div id="firebaseui-auth-container"></div>
+  <div id="loader">Loading...</div>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+
+  <script>
+    let windowWidth = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+    let windowHeight = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+    document.getElementById("logo").style.width = windowWidth / 5;
+  </script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+      authDomain: "test-1bf00.firebaseapp.com",
+      databaseURL: "https://test-1bf00.firebaseio.com",
+      projectId: "test-1bf00",
+      storageBucket: "test-1bf00.appspot.com",
+      messagingSenderId: "305562771380",
+      appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+      measurementId: "G-VYK3VTRJJH"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Initialize the FirebaseUI Widget using Firebase.
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    var uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+          // User successfully signed in.
+          // Return type determines whether we continue the redirect automatically
+          // or whether we leave that to developer to handle.
+          return true;
+        },
+        uiShown: function () {
+          // The widget is rendered.
+          // Hide the loader.
+          document.getElementById('loader').style.display = 'none';
+        }
+      },
+      // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+      signInFlow: 'popup',
+      signInSuccessUrl: 'main.html',
+      signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+
+      ],
+      // Terms of service url.
+      tosUrl: '<your-tos-url>',
+      // Privacy policy url.
+      privacyPolicyUrl: '<your-privacy-policy-url>'
+    };
+    // The start method will wait until the DOM is loaded.
+    ui.start('#firebaseui-auth-container', uiConfig);
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+      } else {
+        // No user is signed in.
+      }
+    });
+    var user = firebase.auth().currentUser;
+    var name, email, photoUrl, uid, emailVerified;
+
+    if (user != null) {
+      name = user.displayName;
+      email = user.email;
+      photoUrl = user.photoURL;
+      emailVerified = user.emailVerified;
+      uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+      // this value to authenticate with your backend server, if
+      // you have one. Use User.getToken() instead.
+    }
+  </script>
+
+</body>
+
+</html>
