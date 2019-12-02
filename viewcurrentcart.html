@@ -9,7 +9,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
-        <title>Shop by Ingredients</title>
+        <title>View Current Cart</title>
         <style>
             .vertical-align {
                 display: flex;
@@ -53,23 +53,21 @@
                 <h5 id='counter2' class='card-subtitle mb-2 text-muted'>Total Price: $ 0</h5>
             </div>
             <div>
-                    <table class='table'>
-                        <tr>
-                            <button onclick="window.location.href='viewcurrentcart.html'" class='btn btn-info btn-lg btn-block'>View Current Cart</button>
-                        </tr>
-                        <tr>
-                            <button id='empty' class='btn btn-warning btn-lg btn-block'>Empty Current Cart</button>
-                        </tr>
-                    </table>
-                </div>
+                <table class='table'>
+                    <tr>
+                        <button class='btn btn-info btn-lg btn-block'>View Current Cart</button>
+                    </tr>
+                    <tr>
+                        <button id='empty' class='btn btn-warning btn-lg btn-block'>Empty Current Cart</button>
+                    </tr>
+                </table>
+            </div>
             <div>
                 <table class="table" id="mainTable">
                     <thead>
                         <tr>
                         <th scope="col" width="40%">Item Name</th>
                         <th scope="col" width="15%">Price</th>
-                        <th scope="col" width="15%">Quantity</th>
-                        <th scope="col" width=30%></th>
                         </tr>
                     </thead>
                 </table>
@@ -91,120 +89,54 @@
                     </div>
                   </div>
                 </div>
-              </div>
+            </div>
         </div>
         
         
 
         <script>
-            let storeselection=sessionStorage.getItem('code')
-            let user = sessionStorage.getItem('user')
-            console.log('test1', storeselection, user)
+            let storeselection=0
             let totalitems=0
             let totalprice=0
+            let offset=0
             // retrives total items and total price from db's temporary shopping list
-            db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
-                if (doc.exists) {
-                    console.log('if')
-                    console.log(doc.exists)
-                    totalitems=doc.data().ti;
-                    totalprice=doc.data().tp;
-                }
-                if (doc.exists==false) {
-                    console.log('else')
-                    db.collection('Shopping List').doc(user).set({
-                        ti:0,
-                        tp:0,
-                        items:[],
-                        name:user
-                    })
-                }
+            db.collection('Shopping List').doc('Temporary').get().then(function(doc){
+                totalitems=doc.data().ti
+                totalprice=doc.data().tp
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
-            })})
+            })
             // loops through all categories of ingredients
             // creates collapsible table for each category of ingredients
-            db.collection('Ingredients').get().then((snapshot) =>{snapshot.docs.forEach(doc => {
+            db.collection('Shopping List').doc('Temporary').get().then(function(doc){
+                let items = doc.data().items
+                console.log(items)
                 let block = document.getElementById('mainBlock')
-                let div = document.createElement('div')
-                div.setAttribute('id', doc.data().name)
-                div.setAttribute('class', 'table-responsive')
                 let table = document.createElement("table")
-                table.setAttribute('class', 'table')
-                let btn = document.createElement("button")
-                btn.setAttribute('class', 'btn btn-secondary btn-lg btn-block text-left')
-                btn.setAttribute('data-toggle', 'collapse')
-                btn.setAttribute('href', '#'+doc.data().name)
-                btn.setAttribute('aria-expanded', 'false')
-                btn.setAttribute('aria-controls', doc.data().name)
-                btn.innerHTML = doc.data().name
-                btn.setAttribute('style', 'margin: 7px')
-                block.appendChild(btn)
-                block.appendChild(div)
-                div.appendChild(table)
-
-                // loops through all shop items of current loop's category
-                // creates rows with information about the shop item
-                // also creates add to cart button for each shop item
-                let brands = doc.data().brands
-                for (let i=0;i<brands.length;i++){
-                    let price=brands[i].price
-                    let quantity=brands[i].quantity
+                table.class='table'
+                for (let i=0;i<items.length;i++){
+                    let price=doc.data().items[i].price
+                    let name=doc.data().items[i].name
                     let newtr = document.createElement("tr")
                     let newth = document.createElement("td")
                     newth.setAttribute("width", "40%")
-                    newth.innerHTML=brands[i].name
+                    newth.innerHTML=name
                     let newth2 = document.createElement("td")
                     newth2.setAttribute("width", "15%")
-                    newth2.innerHTML='$ '+brands[i].price
-                    let newth3 = document.createElement("td")
-                    newth3.setAttribute("width", "15%")
-                    newth3.innerHTML=brands[i].quantity[0]+brands[i].quantity[1]
-                    let newth4 = document.createElement('td')
-                    newth4.setAttribute('width', '30%')
-                    let addBtn = document.createElement('button')
-                    addBtn.setAttribute('class', 'btn btn-secondary btn-sm')
-                    newth4.appendChild(addBtn)
-                    addBtn.innerHTML='Add to Cart'
+                    newth2.innerHTML='$ '+price
                     newtr.appendChild(newth)
                     newtr.appendChild(newth2)
-                    newtr.appendChild(newth3)
-                    newtr.appendChild(newth4)
                     table.appendChild(newtr)
-                    addBtn.onclick=addBtnHandler
-                    function addBtnHandler() {
-                        if (brands[i].availability[storeselection]) {
-                            totalitems++
-                            totalprice = totalprice + brands[i].price
-                            totalprice = parseFloat(totalprice.toFixed(2))
-                            db.collection('Shopping List').doc(user).get().then(function(doc){
-                                let currentlist = doc.data().items
-                                currentlist.push({name: brands[i].name, price: brands[i].price})
-                                db.collection('Shopping List').doc(user).update({
-                                    items: currentlist,
-                                    tp: totalprice,
-                                    ti: totalitems
-                                })
-                                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
-                                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
-                            })
-                        }
-                        else {
-                            document.getElementById('outofstockmsg').innerHTML=brands[i].name+' is not available at the grocery store you have selected.'
-                            $("#outofstock").modal()
-                        }
-                    }
                 }
-
-            })})
-
+                block.appendChild(table)
+            })
+           
             // this button empties the current shopping cart            
             function emptyHandler() {
-                db.collection('Shopping List').doc(user).set({
+                db.collection('Shopping List').doc('Temporary').set({
                     items: [],
                     ti: 0,
-                    tp: 0,
-                    name: user
+                    tp: 0
                 })
                 totalprice = 0
                 totalitems = 0

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        
+            <title>Select Store</title>
+            <style>
+                .vertical-align {
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+                }
+                .shop-button {
+                    margin: 7px;
+                    width: 250px;
+                }
+            </style>
+        </head>
+        <body style="background-color:burlywood">
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script>
+            // Your web app's Firebase configuration
+                var firebaseConfig = {
+                    apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+                    authDomain: "test-1bf00.firebaseapp.com",
+                    databaseURL: "https://test-1bf00.firebaseio.com",
+                    projectId: "test-1bf00",
+                    storageBucket: "test-1bf00.appspot.com",
+                    messagingSenderId: "305562771380",
+                    appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+                    measurementId: "G-VYK3VTRJJH"
+                };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var db = firebase.firestore();
+        </script>
+
+        <div class="container vertical-align align-items-center justify-content-center table-responsive">
+            <table class="table" style="width:50%;vertical-align: middle;background-color: white;">
+                <thead class="thead-dark" id='stores'>
+                    <tr>
+                    <th scope="col">Select Your Store</th>
+                    <th scope='col'></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <script>
+            let user = sessionStorage.getItem('email')
+            console.log('user is', user)
+            db.collection('Grocery Stores').where('working','==',true).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+                let table = document.getElementById('stores')
+                let name = doc.data().name
+                let address = doc.data().address
+                let newtr = document.createElement("tr")
+                let newth = document.createElement("td")
+                let nametext = document.createElement('h3')
+                let addresstext = document.createElement('p')
+                nametext.innerHTML = name
+                addresstext.innerHTML = address
+                newth.setAttribute("width", "40%")
+                newth.appendChild(nametext)
+                newth.appendChild(addresstext)
+                let newth2 = document.createElement('td')
+                newth2.setAttribute('width', '30%')
+                newth2.align='center'
+                let selectBtn = document.createElement('button')
+                selectBtn.setAttribute('class', 'btn btn-secondary btn-sm')
+                newth2.appendChild(selectBtn)
+                selectBtn.innerHTML='Select'
+                newtr.appendChild(newth)
+                newtr.appendChild(newth2)
+                table.appendChild(newtr)
+                function selectBtnHandler() {
+                    sessionStorage.setItem('code', doc.data().code)
+                    window.open('main.html','_self')
+                }
+                selectBtn.onclick=selectBtnHandler
+            })})
+        </script>
+    </body>
+</html>
