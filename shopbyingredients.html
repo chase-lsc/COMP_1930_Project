@@ -48,7 +48,7 @@
 
         <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand">Navbar</a>
+                <a class="navbar-brand" id='currentstore'></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -137,7 +137,13 @@
                 emptyHandler()
                 sessionStorage.setItem('storeChange', 0)
             }
-            // retrives total items and total price from db's temporary shopping list
+            // get the current store name
+            db.collection('Grocery Stores').where('code', '==', storeselection).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+                if (doc.exists) {
+                    document.getElementById('currentstore').innerHTML = doc.data().name
+                }
+            })})
+            // checks if the user's data already exists in the system
             db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 if (doc.exists) {
                     userExistCheck = 1
@@ -145,6 +151,7 @@
                     totalprice=doc.data().tp;
                 }
             })})
+            // creates a database for the user if the user is new
             db.collection('Shopping List').get().then(function(doc){
                 if (userExistCheck == 0) {
                     db.collection('Shopping List').doc(user).set({
@@ -207,9 +214,13 @@
                     newtr.appendChild(newth3)
                     newtr.appendChild(newth4)
                     table.appendChild(newtr)
+                    console.log(brands[i].availability[storeselection])
+                    if (brands[i].availability[storeselection]==false) {
+                        addBtn.disabled=true
+                        newth.innerHTML = newth.innerHTML + ' (not available at this store)'
+                    }
                     addBtn.onclick=addBtnHandler
                     function addBtnHandler() {
-                        if (brands[i].availability[storeselection]) {
                             totalitems++
                             totalprice = totalprice + brands[i].price
                             totalprice = parseFloat(totalprice.toFixed(2))
@@ -224,11 +235,6 @@
                                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
                             })
-                        }
-                        else {
-                            document.getElementById('outofstockmsg').innerHTML=brands[i].name+' is not available at the grocery store you have selected.'
-                            $("#outofstock").modal()
-                        }
                     }
                 }
 

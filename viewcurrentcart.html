@@ -65,7 +65,7 @@
 
         <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand">Navbar</a>
+                <a class="navbar-brand" id='currentstore'></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -135,7 +135,13 @@
                 emptyHandler()
                 sessionStorage.setItem('storeChange', 0)
             }
-            // retrives total items and total price from db's temporary shopping list
+            // read and display the current store name
+            db.collection('Grocery Stores').where('code', '==', storeselection).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+                if (doc.exists) {
+                    document.getElementById('currentstore').innerHTML = doc.data().name
+                }
+            })})
+            // checks if the user's data already exists in the system
             db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 if (doc.exists) {
                     userExistCheck = 1
@@ -143,6 +149,7 @@
                     totalprice=doc.data().tp;
                 }
             })})
+            // creates a database for the user if the user is new
             db.collection('Shopping List').get().then(function(doc){
                 if (userExistCheck == 0) {
                     db.collection('Shopping List').doc(user).set({
@@ -156,7 +163,7 @@
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             })
-            // loops through all categories of ingredients
+            // loops through all ingredients of all categories
             // creates collapsible table for each category of ingredients
             db.collection('Shopping List').doc(user).get().then(function(doc){
                 if (doc.data().ti>0){
@@ -182,11 +189,12 @@
                     block.appendChild(table)
                 }
                 else {
+                    // displays an alert for the user if they don't have anything in their cart
                     $("#noitems").modal()
                 }
             })
            
-            // this button empties the current shopping cart            
+            // this button empties the current shopping cart and resets all related data in the user's database            
             function emptyHandler() {
                 db.collection('Shopping List').doc(user).set({
                     items: [],
@@ -202,11 +210,11 @@
             }
             document.getElementById('empty').onclick=emptyHandler
             
+            // signs out the user
             function signOutHandler() {
                 sessionStorage.clear()
             }
             document.getElementById('signout').onclick=signOutHandler
-
         </script>
     </body>
 </html>
