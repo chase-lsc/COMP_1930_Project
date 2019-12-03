@@ -29,16 +29,16 @@
 
         <script>
             // Your web app's Firebase configuration
-                var firebaseConfig = {
-                    apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
-                    authDomain: "test-1bf00.firebaseapp.com",
-                    databaseURL: "https://test-1bf00.firebaseio.com",
-                    projectId: "test-1bf00",
-                    storageBucket: "test-1bf00.appspot.com",
-                    messagingSenderId: "305562771380",
-                    appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
-                    measurementId: "G-VYK3VTRJJH"
-                };
+            var firebaseConfig = {
+                apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+                authDomain: "test-1bf00.firebaseapp.com",
+                databaseURL: "https://test-1bf00.firebaseio.com",
+                projectId: "test-1bf00",
+                storageBucket: "test-1bf00.appspot.com",
+                messagingSenderId: "305562771380",
+                appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+                measurementId: "G-VYK3VTRJJH"
+            };
             // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             var db = firebase.firestore();
@@ -54,10 +54,41 @@
                 </thead>
             </table>
         </div>
+        <div class="modal" tabindex="-1" role="dialog" id='storeChange'>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">You are about to change your store.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id='msg'></p>
+                    <p>Changing your store will empty your current shopping cart.</p>
+                    <p>Would you like to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id='yes'>Yes</button>
+                </div>
+                </div>
+            </div>
+        </div>
 
         <script>
-            let user = sessionStorage.getItem('email')
+            let user = sessionStorage.getItem('user')
+            let storeselection=-1
+            let userexistcheck=0
+            let newselection=-1
             console.log('user is', user)
+            db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+                if (doc.exists) {
+                    storeselection = doc.data().store
+                    userexistcheck=1
+                    console.log(doc.data())
+                }
+            })})
             db.collection('Grocery Stores').where('working','==',true).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 let table = document.getElementById('stores')
                 let name = doc.data().name
@@ -82,11 +113,29 @@
                 newtr.appendChild(newth2)
                 table.appendChild(newtr)
                 function selectBtnHandler() {
-                    sessionStorage.setItem('code', doc.data().code)
-                    window.open('main.html','_self')
+                    if (userexistcheck==1 && doc.data().code!=storeselection){
+                        newselection = doc.data().code
+                        console.log(doc.data().code, storeselection)
+                        console.log('new selection is ', newselection)
+                        $("#storeChange").modal()
+                    }
+                    else {
+                        sessionStorage.setItem('code', doc.data().code)
+                        window.open('main.html','_self')
+                    }
                 }
                 selectBtn.onclick=selectBtnHandler
             })})
+
+            function yesHandler() {
+                // for some reason this script can't alter firebase even using the exact same code
+                // so we will empty the shopping list on the next page
+                sessionStorage.setItem('storeChange', 1)
+                sessionStorage.setItem('code', newselection)
+                window.open('main.html','_self')
+            }
+            document.getElementById('yes').onclick=yesHandler
+
         </script>
     </body>
 </html>

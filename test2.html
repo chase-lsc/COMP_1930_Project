@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form action="/action_page.php">
+            First name:<br>
+            <input type="text" name="firstname" value="Mickey" id='firstname'><br>
+            Last name:<br>
+            <input type="text" name="lastname" value="Mouse" id='lastname'><br><br>
+            <input type="button" id='test' value='submit'>
+        </form>
+        <script>
+            function test() {
+                text = document.getElementById('firstname').value
+                text2 = document.getElementById('lastname').value
+                console.log(text)
+                console.log(text2)
+            }
+            document.getElementById('test').onclick=test
+        </script>
+    </body>
+</html>

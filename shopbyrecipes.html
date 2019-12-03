@@ -47,6 +47,36 @@
         
 
         <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id='navbarNav'>
+                    <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="main.html">Main Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="selectstore.html">Select Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shopbyingredients.html">Shop By Ingredients</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="shopbyrecipes.html">Shop By Recipes<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="viewcurrentcart.html">View Current Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-secondary" type='button' href="landingpagedemo.html" id='signout' style='color:aliceblue'>Sign Out</a>
+                    </li>
+                    </ul>
+                </div>
+            </nav>
+
             <div id='card' style='text-align: center;'>
                 <hr>
                 <h5 id='counter' class='card-subtitle mb-2 text-muted'>Items Selected: 0</h5>
@@ -96,13 +126,36 @@
         
 
         <script>
-            let storeselection=0
+            let storeselection=sessionStorage.getItem('code')
+            let user = sessionStorage.getItem('user')
             let totalitems=0
             let totalprice=0
+            let userExistCheck = 0
+            // for some reason firebase is denying selectstore from altering its database even using the exact same code
+            // so we will empty the shopping list on this page
+            if (sessionStorage.getItem('storeChange')==1) {
+                emptyHandler()
+                sessionStorage.setItem('storeChange', 0)
+            }
+            console.log('test1', storeselection, user)
             // retrives total items and total price from db's temporary shopping list
-            db.collection('Shopping List').doc('Temporary').get().then(function(doc){
-                totalitems=doc.data().ti
-                totalprice=doc.data().tp
+            db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+                if (doc.exists) {
+                    userExistCheck = 1
+                    totalitems=doc.data().ti;
+                    totalprice=doc.data().tp;
+                }
+            })})
+            db.collection('Shopping List').get().then(function(doc){
+                if (userExistCheck == 0) {
+                    db.collection('Shopping List').doc(user).set({
+                        ti:0,
+                        tp:0,
+                        items:[],
+                        name:user,
+                        store:storeselection
+                    })
+                }
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             })
@@ -141,7 +194,7 @@
                         let newtr = document.createElement("tr")
                         let newth = document.createElement("td")
                         newth.setAttribute("width", "40%")
-                        newth.innerHTML=doc.data().brands[ingredients[i].brand].name
+                        newth.innerHTML=itemname
                         let newth2 = document.createElement("td")
                         newth2.setAttribute("width", "15%")
                         newth2.innerHTML='$ '+price
@@ -154,7 +207,7 @@
                         checkbox.type='checkbox'
                         checkbox.id=i+recipename
                         if (doc.data().brands[ingredients[i].brand].availability[storeselection]==false) {
-                            checkbox.innerText='not available at your selected store'
+                            newth.innerHTML = itemname+' (not available at your selected store)'
                             checkbox.disabled=true
                         }
                         else {
@@ -188,7 +241,7 @@
                 function addSelectedHandler() {
                     let selectedcount = 0
                     let selectedprices = 0
-                    db.collection('Shopping List').doc('Temporary').get().then(function(doc){
+                    db.collection('Shopping List').doc(user).get().then(function(doc){
                         let currentlist = doc.data().items
                         for (let i=0;i<ingredients.length;i++){
                             let checkbox = document.getElementById(i+recipename)
@@ -199,7 +252,7 @@
                                 currentlist.push({name: recipeitems[i][0], price: recipeitems[i][1]})
                             }
                         }
-                        db.collection('Shopping List').doc('Temporary').update({
+                        db.collection('Shopping List').doc(user).update({
                             items: currentlist,
                             tp: totalprice,
                             ti: totalitems
@@ -213,10 +266,12 @@
             
             // button that empties the current shopping cart
             function emptyHandler() {
-                db.collection('Shopping List').doc('Temporary').set({
+                db.collection('Shopping List').doc(user).set({
                     items: [],
                     ti: 0,
-                    tp: 0
+                    tp: 0,
+                    name: user,
+                    store:storeselection
                 })
                 totalprice = 0
                 totalitems = 0
@@ -224,13 +279,11 @@
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             }
             document.getElementById('empty').onclick=emptyHandler
-            db.collection('Grocery Stores').doc('PriceSmart').collection('Beef').get().then((snapshot) => {
-                snapshot.docs.forEach(doc => {
-                    let price=doc.data().price
-                    let quantity=doc.data().quantity
-                })
-            })
             
+            function signOutHandler() {
+                sessionStorage.clear()
+            }
+            document.getElementById('signout').onclick=signOutHandler
         </script>
     </body>
 </html>

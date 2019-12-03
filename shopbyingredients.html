@@ -47,6 +47,34 @@
         
 
         <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id='navbarNav'>
+                    <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="main.html">Main Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="selectstore.html">Select Store</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="shopbyingredients.html">Shop By Ingredients<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shopbyrecipes.html">Shop By Recipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="viewcurrentcart.html">View Current Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-secondary" type='button' href="landingpagedemo.html" id='signout' style='color:aliceblue'>Sign Out</a>
+                    </li>
+                    </ul>
+                </div>
+            </nav>
             <div id='card' style='text-align: center;'>
                 <hr>
                 <h5 id='counter' class='card-subtitle mb-2 text-muted'>Items Selected: 0</h5>
@@ -102,26 +130,34 @@
             console.log('test1', storeselection, user)
             let totalitems=0
             let totalprice=0
+            let userExistCheck = 0
+            // for some reason firebase is denying selectstore from altering its database even using the exact same code
+            // so we will empty the shopping list on this page
+            if (sessionStorage.getItem('storeChange')==1) {
+                emptyHandler()
+                sessionStorage.setItem('storeChange', 0)
+            }
             // retrives total items and total price from db's temporary shopping list
             db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 if (doc.exists) {
-                    console.log('if')
-                    console.log(doc.exists)
+                    userExistCheck = 1
                     totalitems=doc.data().ti;
                     totalprice=doc.data().tp;
                 }
-                if (doc.exists==false) {
-                    console.log('else')
+            })})
+            db.collection('Shopping List').get().then(function(doc){
+                if (userExistCheck == 0) {
                     db.collection('Shopping List').doc(user).set({
                         ti:0,
                         tp:0,
                         items:[],
-                        name:user
+                        name:user,
+                        store:storeselection
                     })
                 }
                 document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
-            })})
+            })
             // loops through all categories of ingredients
             // creates collapsible table for each category of ingredients
             db.collection('Ingredients').get().then((snapshot) =>{snapshot.docs.forEach(doc => {
@@ -204,7 +240,8 @@
                     items: [],
                     ti: 0,
                     tp: 0,
-                    name: user
+                    name: user,
+                    store:storeselection
                 })
                 totalprice = 0
                 totalitems = 0
@@ -212,6 +249,11 @@
                 document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             }
             document.getElementById('empty').onclick=emptyHandler
+
+            function signOutHandler() {
+                sessionStorage.clear()
+            }
+            document.getElementById('signout').onclick=signOutHandler
             
         </script>
     </body>
