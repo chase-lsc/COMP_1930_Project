@@ -78,10 +78,13 @@
 
         <script>
             let user = sessionStorage.getItem('user')
+            let username = sessionStorage.getItem('username')
+            let uid = sessionStorage.getItem('uid')
             let storeselection=-1
             let userexistcheck=0
             let newselection=-1
             console.log('user is', user)
+            console.log(uid)
             db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
                 if (doc.exists) {
                     storeselection = doc.data().store
@@ -128,8 +131,7 @@
             })})
 
             function yesHandler() {
-                // for some reason this script can't alter firebase even using the exact same code
-                // so we will empty the shopping list on the next page
+                // firebase won't react fast enough before the page changes, so we will pass storeChange and empty the shopping list on the next page
                 sessionStorage.setItem('storeChange', 1)
                 sessionStorage.setItem('code', newselection)
                 window.open('main.html','_self')

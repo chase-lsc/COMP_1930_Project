@@ -1,59 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    
-        <title>Shop by Ingredients</title>
-        <style>
-            .vertical-align {
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-            }
-            .shop-button {
-                margin: 7px;
-                width: 250px;
-            }
-        </style>
-    </head>
-    <body style="background-color:burlywood">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-        <script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Shop by Ingredients</title>
+    <style>
+        .vertical-align {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .shop-button {
+            margin: 7px;
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body style="background-color:burlywood">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
         // Your web app's Firebase configuration
-            var firebaseConfig = {
-                apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
-                authDomain: "test-1bf00.firebaseapp.com",
-                databaseURL: "https://test-1bf00.firebaseio.com",
-                projectId: "test-1bf00",
-                storageBucket: "test-1bf00.appspot.com",
-                messagingSenderId: "305562771380",
-                appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
-                measurementId: "G-VYK3VTRJJH"
-            };
+        var firebaseConfig = {
+            apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+            authDomain: "test-1bf00.firebaseapp.com",
+            databaseURL: "https://test-1bf00.firebaseio.com",
+            projectId: "test-1bf00",
+            storageBucket: "test-1bf00.appspot.com",
+            messagingSenderId: "305562771380",
+            appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+            measurementId: "G-VYK3VTRJJH"
+        };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
-        </script>
+    </script>
 
-        
 
-        <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" id='currentstore'></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id='navbarNav'>
-                    <ul class="navbar-nav">
+
+    <div id='mainBlock' class="container vertical-align table-responsive" style="background-color:white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" id='currentstore'></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id='navbarNav'>
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="main.html">Main Menu</a>
                     </li>
@@ -61,7 +72,8 @@
                         <a class="nav-link" href="selectstore.html">Select Store</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="shopbyingredients.html">Shop By Ingredients<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="shopbyingredients.html">Shop By Ingredients<span
+                                class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="shopbyrecipes.html">Shop By Recipes</a>
@@ -70,104 +82,92 @@
                         <a class="nav-link" href="viewcurrentcart.html">View Current Cart</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-secondary" type='button' href="index.html" id='signout' style='color:aliceblue'>Sign Out</a>
+                        <a class="nav-link btn btn-secondary" type='button' href="index.html" id='signout'
+                            style='color:aliceblue'>Sign Out</a>
                     </li>
-                    </ul>
-                </div>
-            </nav>
-            <div id='card' style='text-align: center;'>
-                <hr>
-                <h5 id='counter' class='card-subtitle mb-2 text-muted'>Items Selected: 0</h5>
-                <h5 id='counter2' class='card-subtitle mb-2 text-muted'>Total Price: $ 0</h5>
+                </ul>
             </div>
-            <div>
-                    <table class='table'>
-                        <tr>
-                            <button onclick="window.location.href='viewcurrentcart.html'" class='btn btn-info btn-lg btn-block'>View Current Cart</button>
-                        </tr>
-                        <tr>
-                            <button id='empty' class='btn btn-warning btn-lg btn-block'>Empty Current Cart</button>
-                        </tr>
-                    </table>
-                </div>
-            <div>
-                <table class="table" id="mainTable">
-                    <thead>
-                        <tr>
+        </nav>
+        <div id='card' style='text-align: center;'>
+            <hr>
+            <h5 id='counter' class='card-subtitle mb-2 text-muted'>Items Selected: 0</h5>
+            <h5 id='counter2' class='card-subtitle mb-2 text-muted'>Total Price: $ 0</h5>
+        </div>
+        <div>
+            <table class='table'>
+                <tr>
+                    <button onclick="window.location.href='viewcurrentcart.html'"
+                        class='btn btn-info btn-lg btn-block'>View Current Cart</button>
+                </tr>
+                <tr>
+                    <button id='empty' class='btn btn-warning btn-lg btn-block'>Empty Current Cart</button>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table class="table" id="mainTable">
+                <thead>
+                    <tr>
                         <th scope="col" width="40%">Item Name</th>
                         <th scope="col" width="15%">Price</th>
                         <th scope="col" width="15%">Quantity</th>
                         <th scope="col" width=30%></th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="modal fade" id="outofstock" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="modal fade" id="outofstock" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">Sorry!</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                        <h5 class="modal-title">Sorry!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
-                      <p id='outofstockmsg'></p>
+                        <p id='outofstockmsg'></p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
-                  </div>
                 </div>
-              </div>
+            </div>
         </div>
-        
-        
+    </div>
 
-        <script>
-            let storeselection=sessionStorage.getItem('code')
-            let user = sessionStorage.getItem('user')
-            console.log('test1', storeselection, user)
-            let totalitems=0
-            let totalprice=0
-            let userExistCheck = 0
-            // for some reason firebase is denying selectstore from altering its database even using the exact same code
-            // so we will empty the shopping list on this page
-            if (sessionStorage.getItem('storeChange')==1) {
-                emptyHandler()
-                sessionStorage.setItem('storeChange', 0)
-            }
-            // get the current store name
-            db.collection('Grocery Stores').where('code', '==', storeselection).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
+
+
+    <script>
+        let storeselection = sessionStorage.getItem('code')
+        let user = sessionStorage.getItem('user')
+        console.log('test1', storeselection, user)
+        let totalitems = 0
+        let totalprice = 0
+        db.collection('Shopping List').doc(user).get().then(function (doc) {
+            totalitems = doc.data().ti
+            totalprice = doc.data().tp
+            document.getElementById('counter').innerHTML = 'Items Selected: ' + totalitems
+            document.getElementById('counter2').innerHTML = 'Total Price: $ ' + totalprice
+        })
+        // for some reason firebase is denying selectstore from altering its database even using the exact same code
+        // so we will empty the shopping list on this page
+        if (sessionStorage.getItem('storeChange') == 1) {
+            emptyHandler()
+            sessionStorage.setItem('storeChange', 0)
+        }
+        // get the current store name
+        db.collection('Grocery Stores').where('code', '==', storeselection).get().then((snapshot) => {
+            snapshot.docs.forEach(doc => {
                 if (doc.exists) {
                     document.getElementById('currentstore').innerHTML = doc.data().name
                 }
-            })})
-            // checks if the user's data already exists in the system
-            db.collection('Shopping List').where('name', '==', user).get().then((snapshot)=>{snapshot.docs.forEach(doc=>{
-                if (doc.exists) {
-                    userExistCheck = 1
-                    totalitems=doc.data().ti;
-                    totalprice=doc.data().tp;
-                }
-            })})
-            // creates a database for the user if the user is new
-            db.collection('Shopping List').get().then(function(doc){
-                if (userExistCheck == 0) {
-                    db.collection('Shopping List').doc(user).set({
-                        ti:0,
-                        tp:0,
-                        items:[],
-                        name:user,
-                        store:storeselection
-                    })
-                }
-                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
-                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
             })
-            // loops through all categories of ingredients
-            // creates collapsible table for each category of ingredients
-            db.collection('Ingredients').get().then((snapshot) =>{snapshot.docs.forEach(doc => {
+        })
+        // loops through all categories of ingredients
+        // creates collapsible table for each category of ingredients
+        db.collection('Ingredients').get().then((snapshot) => {
+            snapshot.docs.forEach(doc => {
                 let block = document.getElementById('mainBlock')
                 let div = document.createElement('div')
                 div.setAttribute('id', doc.data().name)
@@ -177,7 +177,7 @@
                 let btn = document.createElement("button")
                 btn.setAttribute('class', 'btn btn-secondary btn-lg btn-block text-left')
                 btn.setAttribute('data-toggle', 'collapse')
-                btn.setAttribute('href', '#'+doc.data().name)
+                btn.setAttribute('href', '#' + doc.data().name)
                 btn.setAttribute('aria-expanded', 'false')
                 btn.setAttribute('aria-controls', doc.data().name)
                 btn.innerHTML = doc.data().name
@@ -190,77 +190,79 @@
                 // creates rows with information about the shop item
                 // also creates add to cart button for each shop item
                 let brands = doc.data().brands
-                for (let i=0;i<brands.length;i++){
-                    let price=brands[i].price
-                    let quantity=brands[i].quantity
+                for (let i = 0; i < brands.length; i++) {
+                    let price = brands[i].price
+                    let quantity = brands[i].quantity
                     let newtr = document.createElement("tr")
                     let newth = document.createElement("td")
                     newth.setAttribute("width", "40%")
-                    newth.innerHTML=brands[i].name
+                    newth.innerHTML = brands[i].name
                     let newth2 = document.createElement("td")
                     newth2.setAttribute("width", "15%")
-                    newth2.innerHTML='$ '+brands[i].price
+                    newth2.innerHTML = '$ ' + brands[i].price
                     let newth3 = document.createElement("td")
                     newth3.setAttribute("width", "15%")
-                    newth3.innerHTML=brands[i].quantity[0]+brands[i].quantity[1]
+                    newth3.innerHTML = brands[i].quantity[0] + brands[i].quantity[1]
                     let newth4 = document.createElement('td')
                     newth4.setAttribute('width', '30%')
                     let addBtn = document.createElement('button')
                     addBtn.setAttribute('class', 'btn btn-secondary btn-sm')
                     newth4.appendChild(addBtn)
-                    addBtn.innerHTML='Add to Cart'
+                    addBtn.innerHTML = 'Add to Cart'
                     newtr.appendChild(newth)
                     newtr.appendChild(newth2)
                     newtr.appendChild(newth3)
                     newtr.appendChild(newth4)
                     table.appendChild(newtr)
                     console.log(brands[i].availability[storeselection])
-                    if (brands[i].availability[storeselection]==false) {
-                        addBtn.disabled=true
+                    if (brands[i].availability[storeselection] == false) {
+                        addBtn.disabled = true
                         newth.innerHTML = newth.innerHTML + ' (not available at this store)'
                     }
-                    addBtn.onclick=addBtnHandler
+                    addBtn.onclick = addBtnHandler
                     function addBtnHandler() {
-                            totalitems++
-                            totalprice = totalprice + brands[i].price
-                            totalprice = parseFloat(totalprice.toFixed(2))
-                            db.collection('Shopping List').doc(user).get().then(function(doc){
-                                let currentlist = doc.data().items
-                                currentlist.push({name: brands[i].name, price: brands[i].price})
-                                db.collection('Shopping List').doc(user).update({
-                                    items: currentlist,
-                                    tp: totalprice,
-                                    ti: totalitems
-                                })
-                                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
-                                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
+                        totalitems++
+                        totalprice = totalprice + brands[i].price
+                        totalprice = parseFloat(totalprice.toFixed(2))
+                        db.collection('Shopping List').doc(user).get().then(function (doc) {
+                            let currentlist = doc.data().items
+                            currentlist.push({ name: brands[i].name, price: brands[i].price })
+                            db.collection('Shopping List').doc(user).update({
+                                items: currentlist,
+                                tp: totalprice,
+                                ti: totalitems
                             })
+                            document.getElementById('counter').innerHTML = 'Items Selected: ' + totalitems
+                            document.getElementById('counter2').innerHTML = 'Total Price: $ ' + totalprice
+                        })
                     }
                 }
 
-            })})
+            })
+        })
 
-            // this button empties the current shopping cart            
-            function emptyHandler() {
-                db.collection('Shopping List').doc(user).set({
-                    items: [],
-                    ti: 0,
-                    tp: 0,
-                    name: user,
-                    store:storeselection
-                })
-                totalprice = 0
-                totalitems = 0
-                document.getElementById('counter').innerHTML = 'Items Selected: '+totalitems
-                document.getElementById('counter2').innerHTML = 'Total Price: $ '+totalprice
-            }
-            document.getElementById('empty').onclick=emptyHandler
+        // this button empties the current shopping cart            
+        function emptyHandler() {
+            db.collection('Shopping List').doc(user).set({
+                items: [],
+                ti: 0,
+                tp: 0,
+                name: user,
+                store: storeselection
+            })
+            totalprice = 0
+            totalitems = 0
+            document.getElementById('counter').innerHTML = 'Items Selected: ' + totalitems
+            document.getElementById('counter2').innerHTML = 'Total Price: $ ' + totalprice
+        }
+        document.getElementById('empty').onclick = emptyHandler
 
-            function signOutHandler() {
-                sessionStorage.clear()
-            }
-            document.getElementById('signout').onclick=signOutHandler
-            
-        </script>
-    </body>
+        function signOutHandler() {
+            sessionStorage.clear()
+        }
+        document.getElementById('signout').onclick = signOutHandler
+
+    </script>
+</body>
+
 </html>

@@ -144,7 +144,12 @@
         let user = sessionStorage.getItem('user')
         let totalitems = 0
         let totalprice = 0
-        let userExistCheck = 0
+        db.collection('Shopping List').doc(user).get().then(function (doc) {
+            totalitems = doc.data().ti
+            totalprice = doc.data().tp
+            document.getElementById('counter').innerHTML = 'Items Selected: ' + totalitems
+            document.getElementById('counter2').innerHTML = 'Total Price: $ ' + totalprice
+        })
         // for some reason firebase is denying selectstore from altering its database even using the exact same code
         // so we will empty the shopping list on this page
         if (sessionStorage.getItem('storeChange') == 1) {
@@ -159,30 +164,6 @@
                     document.getElementById('currentstore').innerHTML = doc.data().name
                 }
             })
-        })
-        // checks if the user's data already exists in the system
-        db.collection('Shopping List').where('name', '==', user).get().then((snapshot) => {
-            snapshot.docs.forEach(doc => {
-                if (doc.exists) {
-                    userExistCheck = 1
-                    totalitems = doc.data().ti;
-                    totalprice = doc.data().tp;
-                }
-            })
-        })
-        // creates a database for the user if the user is new
-        db.collection('Shopping List').get().then(function (doc) {
-            if (userExistCheck == 0) {
-                db.collection('Shopping List').doc(user).set({
-                    ti: 0,
-                    tp: 0,
-                    items: [],
-                    name: user,
-                    store: storeselection
-                })
-            }
-            document.getElementById('counter').innerHTML = 'Items Selected: ' + totalitems
-            document.getElementById('counter2').innerHTML = 'Total Price: $ ' + totalprice
         })
         // loops through all recipes in the recipe library to create collapsable table for each recipe
         // each table is composed of rows for each ingredients
@@ -211,8 +192,11 @@
                 let ingredients = doc.data().Ingredients
                 let recipeitems = []
                 let ingredientslength = ingredients.length
+                console.log(ingredients)
                 for (let i = 0; i < ingredientslength; i++) {
                     db.collection('Ingredients').doc(ingredients[i].category).get().then(function (doc) {
+                        console.log(doc.data())
+                        console.log('ingredients[i] is ', ingredients)
                         let price = doc.data().brands[ingredients[i].brand].price
                         let itemname = doc.data().brands[ingredients[i].brand].name
                         let quantity = doc.data().brands[ingredients[i].brand].quantity
@@ -232,6 +216,12 @@
                         let checkbox = document.createElement('input')
                         checkbox.type = 'checkbox'
                         checkbox.id = i + recipename
+                        newth4.appendChild(checkbox)
+                        newtr.appendChild(newth)
+                        newtr.appendChild(newth2)
+                        newtr.appendChild(newth3)
+                        newtr.appendChild(newth4)
+                        table.appendChild(newtr)
                         if (doc.data().brands[ingredients[i].brand].availability[storeselection] == false) {
                             newth.innerHTML = itemname + ' (not available at your selected store)'
                             checkbox.disabled = true
@@ -239,12 +229,6 @@
                         else {
                             checkbox.checked = 'checked'
                         }
-                        newth4.appendChild(checkbox)
-                        newtr.appendChild(newth)
-                        newtr.appendChild(newth2)
-                        newtr.appendChild(newth3)
-                        newtr.appendChild(newth4)
-                        table.appendChild(newtr)
                     })
                 }
 

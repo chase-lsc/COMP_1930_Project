@@ -1,46 +1,110 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    
-        <title>Main Page</title>
-        <style>
-            .vertical-align {
-                justify-content: center;
-                display: flex;
-                flex-direction: column;
-                min-height: 100%;
-                min-height: 100vh;
-                align-items: center;
-            }
-            .shop-button {
-                margin: 7px;
-                width: 250px;
-            }
-        </style>
-    </head>
 
-    <body style="background-color:burlywood">
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-firestore.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-        <div class="container vertical-align table-responsive" style="background-color:white">
-            <div>
-                <button onclick="window.location.href='shopbyingredients.html'" type="button" class="btn btn-secondary shop-button">Shop by Ingredients</button>
-            </div>
-            <div>
-                <button onclick="window.location.href='shopbyrecipes.html'" type="button" class="btn btn-secondary shop-button">Shop by Recipes</button>
-            </div>
-            <div>
-                <button onclick="window.location.href='viewcurrentcart.html'" type="button" class="btn btn-secondary shop-button">View Current Cart</button>
-            </div>
+    <title>Main Page</title>
+    <style>
+        .vertical-align {
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .shop-button {
+            margin: 7px;
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body style="background-color:burlywood">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBYYQTO-3vKn3dBowFhZqBcTjU7rmoSCm4",
+            authDomain: "test-1bf00.firebaseapp.com",
+            databaseURL: "https://test-1bf00.firebaseio.com",
+            projectId: "test-1bf00",
+            storageBucket: "test-1bf00.appspot.com",
+            messagingSenderId: "305562771380",
+            appId: "1:305562771380:web:a28cdec4bfc2bd16b05ce1",
+            measurementId: "G-VYK3VTRJJH"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+    </script>
+
+    <div class="container vertical-align table-responsive" style="background-color:white">
+        <div>
+            <button onclick="window.location.href='shopbyingredients.html'" type="button"
+                class="btn btn-secondary shop-button">Shop by Ingredients</button>
         </div>
-    </body>
+        <div>
+            <button onclick="window.location.href='shopbyrecipes.html'" type="button"
+                class="btn btn-secondary shop-button">Shop by Recipes</button>
+        </div>
+        <div>
+            <button onclick="window.location.href='viewcurrentcart.html'" type="button"
+                class="btn btn-secondary shop-button">View Current Cart</button>
+        </div>
+    </div>
+    <script>
+        let user = sessionStorage.getItem('user')
+        let username = sessionStorage.getItem('username')
+        let uid = sessionStorage.getItem('uid')
+        let code = sessionStorage.getItem('code')
+        let userExistCheck = 0
+        db.collection("users").doc(uid).set({
+            email: user,
+            name: username,
+            store: code
+        })
+        // checks if the user's data already exists in the system
+        db.collection('Shopping List').where('name', '==', user).get().then((snapshot) => {
+            snapshot.docs.forEach(doc => {
+                if (doc.exists) {
+                    userExistCheck = 1
+                }
+            })
+        })
+        // creates a database for the user if the user is new
+        db.collection('Shopping List').get().then(function (doc) {
+            if (userExistCheck == 0) {
+                db.collection('Shopping List').doc(user).set({
+                    ti: 0,
+                    tp: 0,
+                    items: [],
+                    name: user,
+                    store: code
+                })
+            }
+        })
+    </script>
+</body>
+
 </html>
