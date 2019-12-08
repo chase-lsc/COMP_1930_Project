@@ -33,6 +33,7 @@ Jay Sui
 
 ## Git Repository Structure
 ```
+├── README.md
 ├── images
 │   ├── logo.png
 ├── index.html
@@ -42,5 +43,4 @@ Jay Sui
 ├── shopbyingredients.html
 ├── shopbyrecipes.html
 ├── viewcurrentcart.html
-├── readme.md
 ```
