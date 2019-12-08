@@ -35,12 +35,12 @@ Jay Sui
 ```
 ├── README.md
 ├── images
-│   ├── logo.png
+│   └── logo.png
 ├── index.html
 ├── login.html
 ├── main.html
 ├── selectstore.html
 ├── shopbyingredients.html
 ├── shopbyrecipes.html
-├── viewcurrentcart.html
+└── viewcurrentcart.html
 ```
