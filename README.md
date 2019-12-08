@@ -1,4 +1,5 @@
 # COMP_1930_Project
+This project is to create an application that allows users to check if certain ingredients are available at specified stores. The application also lets the users create a personal shopping list by adding ingredients from either ingredient's category or from a specific recipe.
 
 ## project members:
 Chase Lu\
@@ -33,9 +34,9 @@ Jay Sui
 
 ## Git Repository Structure
 ```
-├── README.md
 ├── images
 │   └── logo.png
+├── README.md
 ├── index.html
 ├── login.html
 ├── main.html
